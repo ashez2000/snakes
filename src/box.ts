@@ -2,47 +2,25 @@ import { Direction } from "./direction"
 import { GRID_SIZE } from "./render"
 import { randInt } from "./util"
 
-export type Box = {
-  x: number
-  y: number
-}
+export type Box = { x: number; y: number }
 
-export const randBox = (range: number): Box => ({
-  x: randInt(range),
-  y: randInt(range),
-})
+export const create = (x: number, y: number): Box => ({ x, y })
+export const eq = (a: Box) => (b: Box) => a.x === b.x && a.y === b.y
+export const random = (): Box => create(randInt(GRID_SIZE), randInt(GRID_SIZE))
 
-export const isSameBox = (a: Box, b: Box) => a.x === b.x && a.y === b.y
+// next return next box wrt given direction
+export const next =
+  (b: Box) =>
+  (dir: Direction): Box => {
+    if (dir === Direction.UP) return create(b.x, b.y == 1 ? 20 : b.y - 1)
 
-export const nextPostion = (box: Box, dir: Direction): Box => {
-  switch (dir) {
-    case Direction.UP:
-      return {
-        x: box.x,
-        y: box.y == 1 ? 20 : box.y - 1,
-      }
+    if (dir === Direction.DOWN)
+      return create(b.x, b.y == GRID_SIZE ? 1 : b.y + 1)
 
-    case Direction.DOWN:
-      return {
-        x: box.x,
-        y: box.y == GRID_SIZE ? 1 : box.y + 1,
-      }
+    if (dir === Direction.RIGHT)
+      return create(b.x == GRID_SIZE ? 1 : b.x + 1, b.y)
 
-    case Direction.RIGHT:
-      return {
-        x: box.x == GRID_SIZE ? 1 : box.x + 1,
-        y: box.y,
-      }
+    if (dir === Direction.LEFT) return create(b.x == 1 ? 20 : b.x - 1, b.y)
 
-    case Direction.LEFT:
-      return {
-        x: box.x == 1 ? 20 : box.x - 1,
-        y: box.y,
-      }
-
-    case Direction.NONE:
-      return box
-    default:
-      return box
+    return b
   }
-}

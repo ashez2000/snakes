@@ -1,37 +1,35 @@
 import "./style.css"
 
-import { GRID_SIZE, render } from "./render"
-import { Box, randBox, nextPostion, isSameBox } from "./box"
+import { render } from "./render"
+import * as box from "./box"
 import { Direction } from "./direction"
 
-let snake: Box[] = [randBox(GRID_SIZE)]
-let food: Box = randBox(GRID_SIZE)
+let snake: box.Box[] = [box.random()]
+let food: box.Box = box.random()
 let direction = Direction.NONE
 
 const nextSnake = (dir: Direction) => {
-  const n = nextPostion(snake[0], dir)
+  const n = box.next(snake[0])(dir)
   snake.pop()
   snake.unshift(n)
 }
 
-const isHit = (head: Box, snake: Box[]) =>
-  snake
-    .slice(1)
-    .map(b => isSameBox(b, head))
-    .includes(true)
+const isHit = (head: box.Box, snake: box.Box[]) =>
+  snake.slice(1).map(box.eq(head)).includes(true)
 
 setInterval(() => {
   nextSnake(direction)
 
   // if consumed food
-  if (isSameBox(snake[0], food)) {
-    snake.unshift(nextPostion(snake[0], direction))
-    food = randBox(GRID_SIZE)
+  if (box.eq(snake[0])(food)) {
+    snake.unshift(box.next(snake[0])(direction))
+    food = box.random()
   }
 
   if (isHit(snake[0], snake)) {
-    snake = [randBox(GRID_SIZE)]
-    food = randBox(GRID_SIZE)
+    snake = [box.random()]
+    food = box.random()
+    direction = Direction.NONE
   }
 
   render(snake, food)
