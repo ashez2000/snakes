@@ -12,6 +12,8 @@ export const randBox = (range: number): Box => ({
   y: randInt(range),
 })
 
+export const isSameBox = (a: Box, b: Box) => a.x === b.x && a.y === b.y
+
 export const nextPostion = (box: Box, dir: Direction): Box => {
   switch (dir) {
     case Direction.UP:
