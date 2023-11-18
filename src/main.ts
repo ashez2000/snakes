@@ -14,12 +14,23 @@ const nextSnake = (dir: Direction) => {
   snake.unshift(n)
 }
 
+const isHit = (head: Box, snake: Box[]) =>
+  snake
+    .slice(1)
+    .map(b => isSameBox(b, head))
+    .includes(true)
+
 setInterval(() => {
   nextSnake(direction)
 
   // if consumed food
   if (isSameBox(snake[0], food)) {
     snake.unshift(nextPostion(snake[0], direction))
+    food = randBox(GRID_SIZE)
+  }
+
+  if (isHit(snake[0], snake)) {
+    snake = [randBox(GRID_SIZE)]
     food = randBox(GRID_SIZE)
   }
 
