@@ -13,8 +13,11 @@ const createBox = (box: Box, type: "snake" | "food") => {
 }
 
 export const render = (snake: Box[], food: Box) => {
+  board.innerHTML = ""
+
   for (const b of snake) {
     board.appendChild(createBox(b, "snake"))
   }
+
   board.appendChild(createBox(food, "food"))
 }
