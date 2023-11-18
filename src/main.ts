@@ -2,52 +2,51 @@ import "./style.css"
 
 import { render } from "./render"
 import * as box from "./box"
+import * as snake from "./snake"
 import { Direction } from "./direction"
+import { GameState } from "./game"
 
-let snake: box.Box[] = [box.random()]
-let food: box.Box = box.random()
-let direction = Direction.NONE
-
-const nextSnake = (dir: Direction) => {
-  const n = box.next(snake[0])(dir)
-  snake.pop()
-  snake.unshift(n)
+// mutable state
+let state: GameState = {
+  snake: snake.create(box.random()),
+  food: box.random(),
+  dir: Direction.NONE,
 }
 
-const isHit = (head: box.Box, snake: box.Box[]) =>
-  snake.slice(1).map(box.eq(head)).includes(true)
-
 setInterval(() => {
-  nextSnake(direction)
+  state.snake = snake.move(state.snake)(state.dir)
+
+  if (snake.isHit(state.snake)) {
+    console.log("isHit")
+    state = {
+      snake: snake.create(box.random()),
+      food: box.random(),
+      dir: Direction.NONE,
+    }
+  }
 
   // if consumed food
-  if (box.eq(snake[0])(food)) {
-    snake.unshift(box.next(snake[0])(direction))
-    food = box.random()
+  if (box.eq(state.snake.head)(state.food)) {
+    state.snake = snake.update(state.snake)(state.food)
+    state.food = box.random()
   }
 
-  if (isHit(snake[0], snake)) {
-    snake = [box.random()]
-    food = box.random()
-    direction = Direction.NONE
-  }
-
-  render(snake, food)
+  render(state)
 }, 300)
 
 window.addEventListener("keydown", e => {
   switch (e.key) {
     case "ArrowUp":
-      direction = Direction.UP
+      state.dir = Direction.UP
       break
     case "ArrowDown":
-      direction = Direction.DOWN
+      state.dir = Direction.DOWN
       break
     case "ArrowLeft":
-      direction = Direction.LEFT
+      state.dir = Direction.LEFT
       break
     case "ArrowRight":
-      direction = Direction.RIGHT
+      state.dir = Direction.RIGHT
       break
   }
 })

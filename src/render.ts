@@ -1,4 +1,5 @@
 import { Box } from "./box"
+import { GameState } from "./game"
 
 export const GRID_SIZE = 20
 
@@ -12,12 +13,14 @@ const createBox = (box: Box, type: "snake" | "food") => {
   return elm
 }
 
-export const render = (snake: Box[], food: Box) => {
+export const render = (state: GameState) => {
   board.innerHTML = ""
 
-  for (const b of snake) {
+  // snake
+  board.appendChild(createBox(state.snake.head, "snake"))
+  for (const b of state.snake.body) {
     board.appendChild(createBox(b, "snake"))
   }
 
-  board.appendChild(createBox(food, "food"))
+  board.appendChild(createBox(state.food, "food"))
 }
