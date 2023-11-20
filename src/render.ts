@@ -4,6 +4,7 @@ import { GameState } from "./game"
 export const GRID_SIZE = 20
 
 const board = document.getElementById("board")!
+const score = document.getElementById("score")!
 
 const createBox = (box: Box, type: "snake" | "food") => {
   const elm = document.createElement("div")
@@ -15,6 +16,8 @@ const createBox = (box: Box, type: "snake" | "food") => {
 
 export const render = (state: GameState) => {
   board.innerHTML = ""
+
+  score.innerText = "" + state.score
 
   // snake
   board.appendChild(createBox(state.snake.head, "snake"))

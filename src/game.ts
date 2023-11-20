@@ -6,4 +6,5 @@ export type GameState = {
   snake: snake.Snake
   food: box.Box
   dir: Direction
+  score: number
 }

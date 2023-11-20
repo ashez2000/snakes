@@ -11,6 +11,7 @@ let state: GameState = {
   snake: snake.create(box.random()),
   food: box.random(),
   dir: Direction.NONE,
+  score: 0,
 }
 
 setInterval(() => {
@@ -22,6 +23,7 @@ setInterval(() => {
       snake: snake.create(box.random()),
       food: box.random(),
       dir: Direction.NONE,
+      score: 0,
     }
   }
 
@@ -29,6 +31,7 @@ setInterval(() => {
   if (box.eq(state.snake.head)(state.food)) {
     state.snake = snake.update(state.snake)(state.food)
     state.food = box.random()
+    state.score += 1
   }
 
   render(state)
